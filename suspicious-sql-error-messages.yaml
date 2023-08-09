@@ -1,0 +1,52 @@
+id: suspicious-sql-error-messages
+info:
+  name: SQL - Suspicious Error Messages
+  author: Your Name
+  severity: critical
+  description: SQL error messages that indicate probing for an injection attack were detected.
+  classification:
+    cvss-metrics: CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H
+    cvss-score: 9.8
+    cwe-id: CWE-89
+  tags: file,logs,sql,error
+
+file:
+  - extensions:
+      - all
+
+    extractors:
+      - type: regex
+        name: oracle
+        part: body
+        regex:
+          - 'quoted string not properly terminated'
+          - 'ORA-'
+          - 'PLS-'
+          - 'SP2-'
+          - 'TNS-'
+          - 'NCR-'
+          - 'NZE-'
+
+      - type: regex
+        name: mysql
+        part: body
+        regex:
+          - 'You have an error in your SQL syntax'
+          - 'MySQL server version for the right syntax to use near'
+          - 'Column count doesn\'t match value count'
+
+      - type: regex
+        name: sql_server
+        part: body
+        regex:
+          - 'Unclosed quotation mark'
+          - 'Microsoft SQL Server'
+          - 'Incorrect syntax near'
+          - 'Conversion failed when converting the'
+
+      - type: regex
+        name: sqlite
+        part: body
+        regex:
+          - 'near \"\*\"\: syntax error'
+          - 'SELECTs to the left and right of UNION do not have the same number of result columns'
